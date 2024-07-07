@@ -19,11 +19,17 @@ async function getDiskSpace() {
     }
 }
 
-// Define a route to display the architecture, RAM, and disk space
+// Function to check if the process has root access
+function hasRootAccess() {
+    return process.getuid && process.getuid() === 0;
+}
+
+// Define a route to display the architecture, RAM, disk space, and root access
 app.get('/', async (req, res) => {
     const totalMemory = os.totalmem() / (1024 ** 3); // Convert bytes to GB
     const freeMemory = os.freemem() / (1024 ** 3); // Convert bytes to GB
     const diskSpace = await getDiskSpace();
+    const rootAccess = hasRootAccess();
 
     res.send(`
         <h1>System Information</h1>
@@ -35,6 +41,7 @@ app.get('/', async (req, res) => {
             <p>Free Disk Space: ${(diskSpace.free / (1024 ** 3)).toFixed(2)} GB</p>
             <p>Available Disk Space: ${(diskSpace.available / (1024 ** 3)).toFixed(2)} GB</p>
         ` : '<p>Error retrieving disk space information.</p>'}
+        <p>Root Access: ${rootAccess ? 'Yes' : 'No'}</p>
     `);
 });
 
@@ -46,6 +53,7 @@ app.listen(port, async () => {
     const totalMemory = os.totalmem() / (1024 ** 3); // Convert bytes to GB
     const freeMemory = os.freemem() / (1024 ** 3); // Convert bytes to GB
     const diskSpace = await getDiskSpace();
+    const rootAccess = hasRootAccess();
 
     console.log(`Total Memory (RAM): ${totalMemory.toFixed(2)} GB`);
     console.log(`Free Memory (RAM): ${freeMemory.toFixed(2)} GB`);
@@ -57,4 +65,6 @@ app.listen(port, async () => {
     } else {
         console.log('Error retrieving disk space information.');
     }
+
+    console.log(`Root Access: ${rootAccess ? 'Yes' : 'No'}`);
 });
