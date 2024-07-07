@@ -43,10 +43,13 @@ app.get('/', async (req, res) => {
         ` : '<p>Error retrieving disk space information.</p>'}
         <p>Root Access: ${rootAccess ? 'Yes' : 'No'}</p>
     `);
+
+    // Exit the process after sending the response
+    process.exit(0);
 });
 
 // Start the server and log the system information
-app.listen(port, async () => {
+const server = app.listen(port, async () => {
     console.log(`Server is running at http://localhost:${port}`);
     console.log(`The architecture of this machine is: ${architecture}`);
 
@@ -67,4 +70,16 @@ app.listen(port, async () => {
     }
 
     console.log(`Root Access: ${rootAccess ? 'Yes' : 'No'}`);
+
+    // Exit the process after logging system information
+    process.exit(0);
+});
+
+// Handle server close events to gracefully exit
+process.on('SIGINT', () => {
+    console.log('Server shutting down...');
+    server.close(() => {
+        console.log('Server has shut down.');
+        process.exit(0);
+    });
 });
