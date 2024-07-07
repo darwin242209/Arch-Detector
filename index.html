@@ -18,7 +18,10 @@
         <input type="text" id="commandInput" placeholder="Enter bash command">
         <button type="submit">Execute</button>
     </form>
-    <textarea id="output" rows="20" cols="80" readonly></textarea>
+    <div id="outputContainer">
+        <textarea id="output" rows="20" cols="80" readonly></textarea>
+        <div id="errorOutput" style="color: red;"></div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
@@ -32,15 +35,15 @@
                     return;
                 }
 
-                // Execute the command using shell
                 try {
+                    // Execute the command using shell
                     const { stdout, stderr } = await executeCommand(command);
                     const output = stdout || stderr;
                     document.getElementById('output').value += `$ ${command}\n${output}\n\n`;
                     document.getElementById('output').scrollTop = document.getElementById('output').scrollHeight;
                 } catch (error) {
                     console.error('Error executing command:', error);
-                    alert('Error executing command. Please check console for details.');
+                    document.getElementById('errorOutput').textContent = `Error: ${error.message}`;
                 }
 
                 // Clear the input field after executing the command
