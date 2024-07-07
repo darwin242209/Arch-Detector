@@ -29,6 +29,9 @@
         async function getSystemInfo() {
             try {
                 const response = await fetch('/api/system-info'); // Endpoint to fetch system info
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
                 const data = await response.json();
 
                 const systemInfoDiv = document.getElementById('system-info');
@@ -44,7 +47,7 @@
             } catch (error) {
                 console.error('Error fetching system information:', error);
                 const systemInfoDiv = document.getElementById('system-info');
-                systemInfoDiv.innerHTML = '<p>Error fetching system information.</p>';
+                systemInfoDiv.innerHTML = `<p>Error fetching system information: ${error.message}</p>`;
             }
         }
 
