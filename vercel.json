@@ -1,16 +1,12 @@
 {
   "version": 2,
   "builds": [
-    { "src": "index.js", "use": "@vercel/node" }
+    { "src": "arch.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "index.js" }
+    { "src": "/(.*)", "dest": "arch.js" }
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "dependencies": {
-    "diskusage": "^2.3.2",
-    "express": "^4.17.3"
   }
 }
